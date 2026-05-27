@@ -17,7 +17,7 @@ A simple React 19 + Vite project demonstrating how to create and use a reusable 
 ```bash
 src/
  ├── App.jsx
- ├── useDebounce.js
+ ├── useDebounce.jsx
 ```
 
 ---
@@ -49,22 +49,34 @@ export default function useDebounce(inputValue, delay = 3000) {
 ## App Component
 
 ```js
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useDebounce from "./useDebounce";
 
 function App() {
   const [value, setValue] = useState("");
-
   const debounceValue = useDebounce(value);
 
+  const handeChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  useEffect(() => {
+    console.log(debounceValue);
+  }, [debounceValue]);
+
   return (
-    <div>
-      <input value={value} onChange={(e) => setValue(e.target.value)} />
+    <>
+      <div className="App">
+        <input value={value} onChange={handeChange} />
+        <br />
+        <br />
 
-      <h3>Typing Value: {value}</h3>
-
-      <h3>Debounced Value: {debounceValue}</h3>
-    </div>
+        <h2>Typing Value: {value}</h2>
+        <br />
+        <br />
+        <h2>Debounced Value: {debounceValue}</h2>
+      </div>
+    </>
   );
 }
 
