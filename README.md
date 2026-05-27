@@ -1,16 +1,121 @@
-# React + Vite
+# React Debounce Custom Hook
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple React 19 + Vite project demonstrating how to create and use a reusable custom debounce hook.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Custom React Hook
+- Debounce functionality
+- Optimized input handling
+- useEffect cleanup
+- React Hooks practice
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Project Structure
 
-## Expanding the ESLint configuration
+```bash
+src/
+ ├── App.jsx
+ ├── useDebounce.js
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## useDebounce Hook
+
+```js
+import { useState, useEffect } from "react";
+
+export default function useDebounce(inputValue, delay = 3000) {
+  const [debounceValue, setDebounceValue] = useState(inputValue);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebounceValue(inputValue);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [inputValue, delay]);
+
+  return debounceValue;
+}
+```
+
+---
+
+## App Component
+
+```js
+import { useState } from "react";
+import useDebounce from "./useDebounce";
+
+function App() {
+  const [value, setValue] = useState("");
+
+  const debounceValue = useDebounce(value);
+
+  return (
+    <div>
+      <input value={value} onChange={(e) => setValue(e.target.value)} />
+
+      <h3>Typing Value: {value}</h3>
+
+      <h3>Debounced Value: {debounceValue}</h3>
+    </div>
+  );
+}
+
+export default App;
+```
+
+---
+
+## How Debounce Works
+
+- User types in input field
+- Timer starts
+- If user types again before delay:
+  - previous timer clears
+  - new timer starts
+- Final value updates after delay
+
+---
+
+## Real World Use Cases
+
+- Search inputs
+- API optimization
+- Auto complete
+- Filtering large data
+- Reducing unnecessary API calls
+
+---
+
+## Concepts Used
+
+- useState
+- useEffect
+- Custom Hooks
+- Cleanup Function
+- Dependency Array
+- Debouncing
+
+---
+
+## Run Project
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+## Tech Stack
+
+- React 19
+- Vite
+- JavaScript
